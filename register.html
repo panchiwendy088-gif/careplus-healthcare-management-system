@@ -1,0 +1,279 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/main.css">
+    <title>Sign Up | CarePlus</title>
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <a href="index.html" class="navbar-logo">CarePlus</a>
+
+        <ul class="navbar-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="index.html#about">About</a></li>
+            <li><a href="index.html#services">Services</a></li>
+            <li><a href="index.html#contact">Contact</a></li>
+        </ul>
+
+        <a href="login.html" class="btn primary-btn">Login</a>
+    </nav>
+
+    <section class="hero register-hero">
+
+        <div class="hero-content">
+            <p class="subtitle">CARE • HOPE • FAITH</p>
+
+            <h1>Join CarePlus<br>Today</h1>
+
+            <p class="description">
+                Create your account and take the first step toward
+                convenient healthcare. Connect with healthcare
+                professionals and manage your healthcare journey
+                in one place.
+            </p>
+        </div>
+
+        <div class="register-container">
+
+            <div class="register-header">
+                <h2>Create an Account</h2>
+                <p>Fill in your details to get started</p>
+            </div>
+
+            <form id="registerForm">
+
+                <div class="form-group">
+                    <label for="fullname">Full Name</label>
+                    <input
+                        type="text"
+                        id="fullname"
+                        name="fullname"
+                        placeholder="Enter your full name"
+                        autocomplete="name"
+                        maxlength="150"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="Enter your email address"
+                        autocomplete="email"
+                        maxlength="254"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input
+                        type="tel"
+                        id="phone"
+                        name="phone"
+                        placeholder="e.g. +265 991 234 567"
+                        autocomplete="tel"
+                        maxlength="30"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Create a password"
+                        autocomplete="new-password"
+                        minlength="8"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirm-password">Confirm Password</label>
+                    <input
+                        type="password"
+                        id="confirm-password"
+                        name="confirm_password"
+                        placeholder="Re-enter your password"
+                        autocomplete="new-password"
+                        minlength="8"
+                        required>
+                </div>
+
+                <div class="terms">
+                    <label>
+                        <input
+                            type="checkbox"
+                            name="terms"
+                            value="accepted"
+                            required>
+
+                        I agree to the
+                        <a href="#terms">Terms and Conditions</a>
+                        and
+                        <a href="#privacy">Privacy Policy</a>.
+                    </label>
+                </div>
+
+                <!-- Registration success and error messages -->
+                <p
+                    id="message"
+                    role="status"
+                    aria-live="polite"
+                    style="display:none; margin:15px 0; font-size:14px;">
+                </p>
+
+                <button
+                    type="submit"
+                    class="btn primary-btn register-btn">
+                    Create Account
+                </button>
+
+            </form>
+
+            <p class="login-text">
+                Already have an account?
+                <a href="login.html">Login here</a>
+            </p>
+
+        </div>
+
+    </section>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const registerForm = document.getElementById("registerForm");
+        const message = document.getElementById("message");
+        const submitButton = registerForm.querySelector(
+            'button[type="submit"]'
+        );
+
+        function showMessage(text, success = false) {
+            message.textContent = text;
+            message.style.color = success ? "#198754" : "#d93025";
+            message.style.display = "block";
+        }
+
+        registerForm.addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            message.style.display = "none";
+            message.textContent = "";
+
+            const fullName =
+                document.getElementById("fullname").value.trim();
+
+            const email =
+                document.getElementById("email").value.trim();
+
+            const phone =
+                document.getElementById("phone").value.trim();
+
+            const password =
+                document.getElementById("password").value;
+
+            const confirmPassword =
+                document.getElementById("confirm-password").value;
+
+            const termsAccepted = registerForm.querySelector(
+                'input[name="terms"]'
+            ).checked;
+
+            if (password !== confirmPassword) {
+                showMessage("Passwords do not match.");
+                return;
+            }
+
+            if (password.length < 8) {
+                showMessage(
+                    "Your password must contain at least 8 characters."
+                );
+                return;
+            }
+
+            if (!termsAccepted) {
+                showMessage(
+                    "Please accept the Terms and Conditions."
+                );
+                return;
+            }
+
+            submitButton.disabled = true;
+            submitButton.textContent = "Creating Account...";
+
+            try {
+                const response = await fetch(
+                    "/api.php?action=register",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Accept": "application/json"
+                        },
+                        credentials: "same-origin",
+                        body: JSON.stringify({
+                            full_name: fullName,
+                            email: email,
+                            phone: phone,
+                            password: password
+                        })
+                    }
+                );
+
+                let result;
+
+                try {
+                    result = await response.json();
+                } catch {
+                    throw new Error(
+                        "The server returned an invalid response. " +
+                        "Check api.php and the PHP error log."
+                    );
+                }
+
+                if (!response.ok || !result.success) {
+                    throw new Error(
+                        result.message ||
+                        "Registration failed. Please try again."
+                    );
+                }
+
+                showMessage(
+                    "Account created successfully! Redirecting to login...",
+                    true
+                );
+
+                registerForm.reset();
+                submitButton.textContent = "Account Created";
+
+                window.setTimeout(function () {
+                    window.location.href = "/login.html";
+                }, 1500);
+
+            } catch (error) {
+                showMessage(
+                    error.message === "Failed to fetch"
+                        ? "Cannot connect to the server. " +
+                          "Make sure PHP is running and api.php exists."
+                        : error.message
+                );
+
+                submitButton.disabled = false;
+                submitButton.textContent = "Create Account";
+            }
+        });
+
+    });
+    </script>
+
+</body>
+</html>

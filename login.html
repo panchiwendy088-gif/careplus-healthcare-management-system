@@ -1,0 +1,196 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/main.css">
+    <title>Login | CarePlus</title>
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <a href="index.html" class="navbar-logo">CarePlus</a>
+
+        <ul class="navbar-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="index.html#about">About</a></li>
+            <li><a href="index.html#services">Services</a></li>
+            <li><a href="index.html#contact">Contact</a></li>
+        </ul>
+
+        <a href="register.html" class="btn primary-btn">Sign Up</a>
+    </nav>
+
+    <section class="hero login-hero">
+
+        <div class="hero-content">
+            <p class="subtitle">CARE • HOPE • FAITH</p>
+
+            <h1>Welcome<br>Back to CarePlus</h1>
+
+            <p class="description">
+                Access quality healthcare services with ease.
+                Sign in to manage your account, connect with
+                healthcare professionals, and get the care you need.
+            </p>
+        </div>
+
+        <div class="login-container">
+
+            <div class="login-header">
+                <h2>Login to Your Account</h2>
+                <p>Enter your details to continue</p>
+            </div>
+
+            <form id="loginForm">
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="Enter your email"
+                        autocomplete="email"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Enter your password"
+                        autocomplete="current-password"
+                        required>
+                </div>
+
+                <div class="form-options">
+                    <label class="remember-me">
+                        <input type="checkbox" name="remember">
+                        Remember me
+                    </label>
+
+                    <a href="#" id="forgotPasswordLink">
+                        Forgot password?
+                    </a>
+                </div>
+
+                <p
+                    id="errorMessage"
+                    role="alert"
+                    aria-live="polite"
+                    style="color:#d93025; font-size:14px;
+                           margin-bottom:15px; display:none;">
+                </p>
+
+                <button
+                    type="submit"
+                    class="btn primary-btn login-btn">
+                    Login
+                </button>
+
+            </form>
+
+            <p class="signup-text">
+                Don't have an account?
+                <a href="register.html">Sign up</a>
+            </p>
+
+        </div>
+    </section>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const loginForm = document.getElementById("loginForm");
+        const errorMessage = document.getElementById("errorMessage");
+        const loginButton = loginForm.querySelector(
+            'button[type="submit"]'
+        );
+
+        loginForm.addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            errorMessage.textContent = "";
+            errorMessage.style.display = "none";
+
+            loginButton.disabled = true;
+            loginButton.textContent = "Logging in...";
+
+            try {
+                const response = await fetch("/api.php?action=login", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    credentials: "same-origin",
+                    body: JSON.stringify({
+                        email: document.getElementById("email")
+                            .value.trim(),
+                        password: document.getElementById("password")
+                            .value
+                    })
+                });
+
+                const result = await response.json();
+
+                if (!response.ok || !result.success) {
+                    throw new Error(
+                        result.message || "Login failed. Please try again."
+                    );
+                }
+
+                if (!result.data || !result.data.role) {
+                    throw new Error(
+                        "The server returned incomplete login information."
+                    );
+                }
+
+                if (result.data.role === "patient") {
+                    window.location.replace("/patient-dashboard.html");
+                    return;
+                }
+
+                // This dashboard is intended for patient accounts.
+                await fetch("/api.php?action=logout", {
+                    method: "POST",
+                    credentials: "same-origin"
+                });
+
+                throw new Error(
+                    "This page is for patient accounts. Please use the appropriate portal."
+                );
+
+            } catch (error) {
+                errorMessage.textContent =
+                    error instanceof SyntaxError
+                        ? "The server returned an invalid response. Check api.php."
+                        : error.message === "Failed to fetch"
+                            ? "Cannot reach the server. Check that PHP is running."
+                            : error.message;
+
+                errorMessage.style.display = "block";
+
+            } finally {
+                loginButton.disabled = false;
+                loginButton.textContent = "Login";
+            }
+        });
+
+        document.getElementById("forgotPasswordLink")
+            .addEventListener("click", function (event) {
+                event.preventDefault();
+                errorMessage.textContent =
+                    "Password recovery has not been implemented yet.";
+                errorMessage.style.display = "block";
+            });
+
+    });
+    </script>
+
+</body>
+</html>

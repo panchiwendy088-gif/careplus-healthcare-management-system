@@ -1,0 +1,607 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/main.css">
+    <title>Patient Dashboard | CarePlus</title>
+</head>
+
+<body class="dashboard-page">
+
+    <nav class="navbar">
+        <a href="patient-dashboard.html" class="navbar-logo">
+            CarePlus
+        </a>
+
+        <ul class="navbar-links">
+            <li><a href="#dashboard">Dashboard</a></li>
+            <li><a href="#appointments">Appointments</a></li>
+            <li><a href="#records">Medical Records</a></li>
+        </ul>
+
+        <a href="#" class="btn primary-btn logout-link">Logout</a>
+    </nav>
+
+    <main class="dashboard-container" id="dashboard">
+
+        <section class="welcome-section">
+            <div>
+                <p class="subtitle">CARE • HOPE • FAITH</p>
+
+                <h1 id="welcomeHeading">Welcome, Patient!</h1>
+
+                <p>
+                    Manage your healthcare journey from one place.
+                    Book appointments and view your medical records
+                    whenever you need them.
+                </p>
+
+                <p
+                    id="dashboardMessage"
+                    role="status"
+                    aria-live="polite">
+                </p>
+            </div>
+
+            <div class="welcome-icon">✚</div>
+        </section>
+
+        <!-- Dashboard feature cards -->
+        <section class="dashboard-features">
+
+            <article class="feature-card">
+                <div class="feature-icon">📅</div>
+                <h2>Book Appointment</h2>
+
+                <p>
+                    Schedule a visit with a healthcare professional
+                    at your preferred date and time.
+                </p>
+
+                <a href="#appointments" class="dashboard-btn">
+                    Book Now →
+                </a>
+            </article>
+
+            <article class="feature-card">
+                <div class="feature-icon">📋</div>
+                <h2>View Records</h2>
+
+                <p>
+                    Review your medical history, diagnoses,
+                    treatments, and previous consultations.
+                </p>
+
+                <a href="#records" class="dashboard-btn">
+                    View Records →
+                </a>
+            </article>
+
+            <article class="feature-card logout-card">
+                <div class="feature-icon">↪</div>
+                <h2>Logout</h2>
+
+                <p>
+                    Securely sign out of your patient account
+                    when you finish your visit.
+                </p>
+
+                <a href="#" class="dashboard-btn logout-btn logout-link">
+                    Sign Out →
+                </a>
+            </article>
+
+        </section>
+
+        <!-- Book an appointment -->
+        <section class="dashboard-section" id="appointments">
+
+            <div class="section-heading">
+                <div>
+                    <h2>Book an Appointment</h2>
+                    <p>Complete the form to request a consultation.</p>
+                </div>
+            </div>
+
+            <form id="appointmentForm" class="appointment-form">
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+                        <label for="department">Department</label>
+
+                        <select
+                            id="department"
+                            name="department_id"
+                            required>
+                            <option value="">Loading departments...</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="appointment-date">Preferred Date</label>
+
+                        <input
+                            type="date"
+                            id="appointment-date"
+                            name="appointment_date"
+                            required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="appointment-time">Preferred Time</label>
+
+                        <input
+                            type="time"
+                            id="appointment-time"
+                            name="appointment_time"
+                            required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="appointment-type">Appointment Type</label>
+
+                        <select
+                            id="appointment-type"
+                            name="appointment_type"
+                            required>
+                            <option value="">Select type</option>
+                            <option value="in_person">
+                                In-person consultation
+                            </option>
+                            <option value="online">
+                                Online consultation
+                            </option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+                    <label for="reason">Reason for Visit</label>
+
+                    <textarea
+                        id="reason"
+                        name="reason"
+                        rows="4"
+                        maxlength="5000"
+                        placeholder="Briefly describe why you need an appointment..."
+                        required></textarea>
+                </div>
+
+                <p
+                    id="appointmentMessage"
+                    role="status"
+                    aria-live="polite">
+                </p>
+
+                <button
+                    type="submit"
+                    class="btn primary-btn"
+                    id="appointmentSubmit">
+                    Request Appointment
+                </button>
+
+            </form>
+        </section>
+
+        <!-- Existing appointments -->
+        <section class="dashboard-section" id="myAppointmentsSection">
+
+            <div class="section-heading">
+                <div>
+                    <h2>My Appointments</h2>
+                    <p>Check your appointment requests and their status.</p>
+                </div>
+            </div>
+
+            <div class="table-wrapper">
+                <table class="records-table">
+                    <thead>
+                        <tr>
+                            <th>Department</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Healthcare Provider</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="appointmentsBody">
+                        <tr>
+                            <td colspan="5">Loading appointments...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </section>
+
+        <!-- Medical records -->
+        <section class="dashboard-section" id="records">
+
+            <div class="section-heading">
+                <div>
+                    <h2>My Medical Records</h2>
+                    <p>Your personal healthcare history.</p>
+                </div>
+            </div>
+
+            <div class="records-notice">
+                <span>🔒</span>
+                <p>
+                    Your medical records are private.
+                    Only authorized users should access your information.
+                </p>
+            </div>
+
+            <div class="table-wrapper">
+                <table class="records-table">
+                    <thead>
+                        <tr>
+                            <th>Record ID</th>
+                            <th>Date</th>
+                            <th>Healthcare Provider</th>
+                            <th>Diagnosis</th>
+                            <th>Details</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="recordsBody">
+                        <tr>
+                            <td colspan="5">Loading medical records...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </section>
+
+        <!-- Footer -->
+        <footer class="dashboard-footer">
+            <p>© 2026 CarePlus Healthcare. Your health matters.</p>
+        </footer>
+
+    </main>
+
+    <script>
+    const API_URL = "/api.php";
+
+    const dashboardMessage =
+        document.getElementById("dashboardMessage");
+
+    const appointmentForm =
+        document.getElementById("appointmentForm");
+
+    const appointmentMessage =
+        document.getElementById("appointmentMessage");
+
+    const appointmentSubmit =
+        document.getElementById("appointmentSubmit");
+
+    const departmentSelect =
+        document.getElementById("department");
+
+    const appointmentsBody =
+        document.getElementById("appointmentsBody");
+
+    const recordsBody =
+        document.getElementById("recordsBody");
+
+
+    // Common function for communicating with api.php.
+    async function apiRequest(action, options = {}) {
+        const response = await fetch(
+            `${API_URL}?action=${encodeURIComponent(action)}`,
+            {
+                credentials: "same-origin",
+                ...options
+            }
+        );
+
+        let result;
+
+        try {
+            result = await response.json();
+        } catch {
+            throw new Error(
+                "The server returned an invalid response. Check api.php."
+            );
+        }
+
+        if (response.status === 401) {
+            window.location.replace("/login.html");
+            throw new Error("Your session has expired. Please log in again.");
+        }
+
+        if (!response.ok || !result.success) {
+            throw new Error(result.message || "The request failed.");
+        }
+
+        return result.data;
+    }
+
+
+    function showMessage(element, message, success = false) {
+        element.textContent = message;
+        element.style.color = success ? "#198754" : "#d93025";
+    }
+
+
+    function makeCell(row, value) {
+        const cell = document.createElement("td");
+        cell.textContent = value == null ? "" : String(value);
+        row.appendChild(cell);
+        return cell;
+    }
+
+
+    function showTableMessage(tbody, message, columns = 5) {
+        tbody.replaceChildren();
+
+        const row = document.createElement("tr");
+        const cell = document.createElement("td");
+
+        cell.colSpan = columns;
+        cell.textContent = message;
+
+        row.appendChild(cell);
+        tbody.appendChild(row);
+    }
+
+
+    // Load user, departments, appointments and medical records.
+    async function loadDashboard() {
+        try {
+            const user = await apiRequest("me");
+
+            if (user.role !== "patient") {
+                window.location.replace("/login.html");
+                return;
+            }
+
+            document.getElementById("welcomeHeading").textContent =
+                `Welcome, ${user.username || "Patient"}!`;
+
+            await loadDepartments();
+            await loadAppointments();
+            await loadMedicalRecords();
+
+        } catch (error) {
+            showMessage(dashboardMessage, error.message);
+        }
+    }
+
+
+    // Fetch department names and IDs from the database.
+    async function loadDepartments() {
+        try {
+            const departments = await apiRequest("departments");
+
+            departmentSelect.replaceChildren();
+
+            const placeholder = document.createElement("option");
+            placeholder.value = "";
+            placeholder.textContent = departments.length
+                ? "Select department"
+                : "No departments available";
+
+            departmentSelect.appendChild(placeholder);
+
+            departments.forEach(department => {
+                const option = document.createElement("option");
+
+                option.value = department.department_id;
+                option.textContent = department.department_name;
+
+                departmentSelect.appendChild(option);
+            });
+
+            departmentSelect.disabled = departments.length === 0;
+
+        } catch (error) {
+            departmentSelect.replaceChildren();
+
+            const option = document.createElement("option");
+            option.value = "";
+            option.textContent = "Unable to load departments";
+
+            departmentSelect.appendChild(option);
+            departmentSelect.disabled = true;
+
+            showMessage(dashboardMessage, error.message);
+        }
+    }
+
+
+    // Load the patient's appointments.
+    async function loadAppointments() {
+        try {
+            const appointments =
+                await apiRequest("my_appointments");
+
+            appointmentsBody.replaceChildren();
+
+            if (!appointments.length) {
+                showTableMessage(
+                    appointmentsBody,
+                    "You have no appointments yet."
+                );
+                return;
+            }
+
+            appointments.forEach(appointment => {
+                const row = document.createElement("tr");
+
+                makeCell(row, appointment.department_name);
+                makeCell(row, appointment.appointment_date);
+
+                makeCell(
+                    row,
+                    String(appointment.appointment_time || "").slice(0, 5)
+                );
+
+                makeCell(
+                    row,
+                    appointment.doctor_name || "Not assigned"
+                );
+
+                makeCell(row, appointment.status);
+
+                appointmentsBody.appendChild(row);
+            });
+
+        } catch (error) {
+            showTableMessage(appointmentsBody, error.message);
+        }
+    }
+
+
+    // Load the patient's medical records.
+    async function loadMedicalRecords() {
+        try {
+            const records =
+                await apiRequest("medical_records");
+
+            recordsBody.replaceChildren();
+
+            if (!records.length) {
+                showTableMessage(
+                    recordsBody,
+                    "No medical records are available yet."
+                );
+                return;
+            }
+
+            records.forEach(record => {
+                const row = document.createElement("tr");
+
+                makeCell(row, record.record_id);
+                makeCell(row, record.record_date);
+                makeCell(row, record.healthcare_provider);
+                makeCell(row, record.diagnosis);
+
+                const detailsCell = document.createElement("td");
+                const detailsButton = document.createElement("button");
+
+                detailsButton.type = "button";
+                detailsButton.className = "dashboard-btn";
+                detailsButton.textContent = "View details";
+
+                detailsButton.addEventListener("click", function () {
+                    alert(
+                        "Diagnosis: " + (record.diagnosis || "Not provided") +
+                        "\n\nTreatment: " + (record.treatment || "Not provided") +
+                        "\n\nClinical notes: " +
+                        (record.clinical_notes || "No notes available")
+                    );
+                });
+
+                detailsCell.appendChild(detailsButton);
+                row.appendChild(detailsCell);
+
+                recordsBody.appendChild(row);
+            });
+
+        } catch (error) {
+            showTableMessage(recordsBody, error.message);
+        }
+    }
+
+
+    // Submit an appointment request to the API.
+    appointmentForm.addEventListener("submit", async function (event) {
+        event.preventDefault();
+
+        appointmentMessage.textContent = "";
+
+        if (!appointmentForm.reportValidity()) {
+            return;
+        }
+
+        appointmentSubmit.disabled = true;
+        appointmentSubmit.textContent = "Submitting...";
+
+        try {
+            const appointmentData = {
+                department_id: Number(departmentSelect.value),
+                appointment_date:
+                    document.getElementById("appointment-date").value,
+                appointment_time:
+                    document.getElementById("appointment-time").value,
+                appointment_type:
+                    document.getElementById("appointment-type").value,
+                reason:
+                    document.getElementById("reason").value.trim()
+            };
+
+            await apiRequest("book_appointment", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(appointmentData)
+            });
+
+            showMessage(
+                appointmentMessage,
+                "Appointment request submitted successfully!",
+                true
+            );
+
+            appointmentForm.reset();
+
+            await loadAppointments();
+
+        } catch (error) {
+            showMessage(appointmentMessage, error.message);
+        } finally {
+            appointmentSubmit.disabled = false;
+            appointmentSubmit.textContent = "Request Appointment";
+        }
+    });
+
+
+    // Sign out through the API and destroy the PHP session.
+    document.querySelectorAll(".logout-link").forEach(link => {
+        link.addEventListener("click", async function (event) {
+            event.preventDefault();
+
+            link.style.pointerEvents = "none";
+
+            try {
+                await apiRequest("logout", {
+                    method: "POST"
+                });
+
+                window.location.replace("/login.html");
+
+            } catch (error) {
+                showMessage(dashboardMessage, error.message);
+                link.style.pointerEvents = "";
+            }
+        });
+    });
+
+
+    // Prevent the appointment date from being in the past.
+    const dateInput =
+        document.getElementById("appointment-date");
+
+    const now = new Date();
+
+    dateInput.min = [
+        now.getFullYear(),
+        String(now.getMonth() + 1).padStart(2, "0"),
+        String(now.getDate()).padStart(2, "0")
+    ].join("-");
+
+
+    // Start loading data.
+    loadDashboard();
+    </script>
+
+</body>
+</html>
